@@ -653,7 +653,7 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
         } else if (id == NotificationCenter.didSetOrRemoveTwoStepPassword) {
             if (args.length > 0) {
                 currentPassword = (TL_account.Password) args[0];
-                if (listAdapter != null) {
+                if (listAdapter != null && passwordRow >= 0) {
                     listAdapter.notifyItemChanged(passwordRow);
                 }
             } else {
@@ -677,7 +677,7 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
         rowCount = 0;
 
         securitySectionRow = rowCount++;
-        passwordRow = rowCount++;
+        passwordRow = -1;
         autoDeleteMesages = rowCount++;
         passcodeRow = rowCount++;
         if (getMessagesController().config.settingsDisplayPasskeys.get() && Build.VERSION.SDK_INT >= 28 && BuildVars.SUPPORTS_PASSKEYS) {
@@ -696,8 +696,8 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                 SharedConfig.saveConfig();
             }
         }
-        sessionsRow = rowCount++;
-        sessionsDetailRow = rowCount++;
+        sessionsRow = -1;
+        sessionsDetailRow = -1;
 
         privacySectionRow = rowCount++;
         phoneNumberRow = rowCount++;
@@ -801,7 +801,9 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
             }
 
             if (listAdapter != null) {
-                listAdapter.notifyItemChanged(passwordRow);
+                if (passwordRow >= 0) {
+                    listAdapter.notifyItemChanged(passwordRow);
+                }
             }
         }
     }
