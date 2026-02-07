@@ -2700,6 +2700,9 @@ public class MessagesStorage extends BaseController {
             while (cursor.next()) {
                 int folderId = cursor.intValue(1);
                 long did = cursor.longValue(0);
+                if (UserObject.isServiceNotifications(did)) {
+                    continue;
+                }
                 int unread;
                 int mentions = 0;
                 if (isForum(did, FORUM_TYPE_CHAT | FORUM_TYPE_BOT | FORUM_TYPE_DIRECT)) {
@@ -5804,6 +5807,9 @@ public class MessagesStorage extends BaseController {
                     continue;
                 }
                 long did = array.keyAt(a);
+                if (UserObject.isServiceNotifications(did)) {
+                    continue;
+                }
                 if (read) {
                     if (b == 0) {
                         dialogsWithUnread.remove(did);
