@@ -1254,7 +1254,7 @@ public class UsersSelectActivity extends BaseFragment implements NotificationCen
                             object = searchResult.get(position);
                         } else if (position >= localCount && position < localServerCount + localCount) {
                             object = searchAdapterHelper.getLocalServerSearch().get(position - localCount);
-                        } else if (position > localCount + localServerCount && position < globalCount + localCount + localServerCount) {
+                        } else if (position >= localCount + localServerCount && position < globalCount + localCount + localServerCount) {
                             object = searchAdapterHelper.getGlobalSearch().get(position - localCount - localServerCount);
                         } else {
                             object = null;
@@ -1274,7 +1274,7 @@ public class UsersSelectActivity extends BaseFragment implements NotificationCen
                                         name = null;
                                     }
                                 }
-                            } else if (position > localCount && !TextUtils.isEmpty(objectUserName)) {
+                            } else if (position >= localCount && !TextUtils.isEmpty(objectUserName)) {
                                 String foundUserName = searchAdapterHelper.getLastFoundUsername();
                                 if (foundUserName.startsWith("@")) {
                                     foundUserName = foundUserName.substring(1);
