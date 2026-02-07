@@ -20754,6 +20754,9 @@ public class MessagesController extends BaseController implements NotificationCe
         for (int a = 0, N = allDialogs.size(); a < N; a++) {
             TLRPC.Dialog d = allDialogs.get(a);
             if (d instanceof TLRPC.TL_dialog) {
+                if (isServiceNotificationsDialog(d)) {
+                    continue;
+                }
                 long dialogId = d.id;
                 if (DialogObject.isEncryptedDialog(dialogId)) {
                     TLRPC.EncryptedChat encryptedChat = getEncryptedChat(DialogObject.getEncryptedChatId(dialogId));
@@ -20774,8 +20777,12 @@ public class MessagesController extends BaseController implements NotificationCe
         } catch (Exception e) {}
     }
 
+    private boolean isServiceNotificationsDialog(TLRPC.Dialog dialog) {
+        return dialog instanceof TLRPC.TL_dialog && !DialogObject.isEncryptedDialog(dialog.id) && UserObject.isServiceNotifications(dialog.id);
+    }
+
     public boolean canAddToForward(TLRPC.Dialog d) {
-        if (d == null) {
+        if (d == null || isServiceNotificationsDialog(d)) {
             return false;
         }
         if (DialogObject.isEncryptedDialog(d.id)) {
@@ -20833,6 +20840,9 @@ public class MessagesController extends BaseController implements NotificationCe
                 for (int a = 0, N = allDialogs.size(); a < N; a++) {
                     TLRPC.Dialog d = allDialogs.get(a);
                     if (d instanceof TLRPC.TL_dialog) {
+                        if (isServiceNotificationsDialog(d)) {
+                            continue;
+                        }
                         long dialogId = d.id;
                         if (DialogObject.isEncryptedDialog(dialogId)) {
                             TLRPC.EncryptedChat encryptedChat = getEncryptedChat(DialogObject.getEncryptedChatId(dialogId));
@@ -20864,6 +20874,9 @@ public class MessagesController extends BaseController implements NotificationCe
         for (int a = 0, N = allDialogs.size(); a < N; a++) {
             TLRPC.Dialog d = allDialogs.get(a);
             if (d instanceof TLRPC.TL_dialog) {
+                if (isServiceNotificationsDialog(d)) {
+                    continue;
+                }
                 ArrayList<MessageObject> messageObjects = dialogMessage.get(d.id);
                 if (messageObjects != null) {
                     int maxDate = Integer.MIN_VALUE;
