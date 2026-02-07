@@ -1144,7 +1144,7 @@ public class DialogsSearchAdapter extends RecyclerListView.SelectionAdapter {
             publicPostsHashtag = null;
             publicPosts.clear();
             searchAdapterHelper.mergeResults(null, null);
-            if (dialogsType != DialogsActivity.DIALOGS_TYPE_BOT_REQUEST_PEER && !BuildVars.RESTRICTED_BUILD) {
+            if (dialogsType != DialogsActivity.DIALOGS_TYPE_BOT_REQUEST_PEER) {
                 searchAdapterHelper.queryServerSearch(
                     null,
                     true,
@@ -1248,7 +1248,7 @@ public class DialogsSearchAdapter extends RecyclerListView.SelectionAdapter {
                     if (searchId != lastSearchId) {
                         return;
                     }
-                    if (!BuildVars.RESTRICTED_BUILD && needMessagesSearch != 2 && dialogsType != DialogsActivity.DIALOGS_TYPE_GROUPS_ONLY && dialogsType != DialogsActivity.DIALOGS_TYPE_CHANNELS_ONLY && delegate.getSearchForumDialogId() == 0) {
+                    if (needMessagesSearch != 2 && dialogsType != DialogsActivity.DIALOGS_TYPE_GROUPS_ONLY && dialogsType != DialogsActivity.DIALOGS_TYPE_CHANNELS_ONLY && delegate.getSearchForumDialogId() == 0) {
                         searchAdapterHelper.queryServerSearch(
                             query,
                             true,
