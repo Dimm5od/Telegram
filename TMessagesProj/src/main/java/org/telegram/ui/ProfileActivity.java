@@ -4468,6 +4468,9 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 if (userInfo == null) return;
                 Bundle args = new Bundle();
                 args.putLong("chat_id", userInfo.personal_channel_id);
+                if (!getMessagesController().checkCanOpenChat(args, ProfileActivity.this)) {
+                    return;
+                }
                 presentFragment(new ChatActivity(args));
             } else if (position == birthdayRow) {
                 if (birthdayEffect != null && birthdayEffect.start()) {
