@@ -134,7 +134,6 @@ import org.telegram.ui.Components.Premium.boosts.UserSelectorBottomSheet;
 import org.telegram.ui.Components.RLottieDrawable;
 import org.telegram.ui.Components.RecyclerListView;
 import org.telegram.ui.Components.ScaleStateListAnimator;
-import org.telegram.ui.Components.StarAppsSheet;
 import org.telegram.ui.Components.TableView;
 import org.telegram.ui.Components.Text;
 import org.telegram.ui.Components.TextHelper;
@@ -3025,13 +3024,7 @@ public class StarsIntroActivity extends GradientHeaderActivity implements Notifi
                 TextUtils.concat(
                     AndroidUtilities.replaceTags(formatString(R.string.GiftStarsSubtitle, UserObject.getForcedFirstName(user))),
                     " ",
-                    AndroidUtilities.replaceArrows(AndroidUtilities.replaceSingleTag(getString(R.string.GiftStarsSubtitleLinkName).replace(' ', ' '), () -> {
-                        StarAppsSheet sheet = new StarAppsSheet(getContext());
-                        if (!AndroidUtilities.isTablet() && !AndroidUtilities.hasDialogOnTop(attachedFragment) && attachedFragment != null) {
-                            sheet.makeAttached(attachedFragment);
-                        }
-                        sheet.show();
-                    }), true)
+                    getString(R.string.GiftStarsSubtitleLinkName).replace(' ', ' ')
                 )
             );
             headerView.subtitleView.setMaxWidth(HintView2.cutInFancyHalf(headerView.subtitleView.getText(), headerView.subtitleView.getPaint()) + 1);
@@ -4014,13 +4007,7 @@ public class StarsIntroActivity extends GradientHeaderActivity implements Notifi
                 textView.setText(TextUtils.concat(
                     AndroidUtilities.replaceTags(self ? formatString(R.string.ActionGiftStarsSubtitle, UserObject.getForcedFirstName(received)) : getString(R.string.ActionGiftStarsSubtitleYou)),
                     " ",
-                    AndroidUtilities.replaceArrows(AndroidUtilities.replaceSingleTag(getString(R.string.GiftStarsSubtitleLinkName).replace(' ', ' '), () -> {
-                        StarAppsSheet sheet1 = new StarAppsSheet(context);
-                        if (!AndroidUtilities.isTablet() && !AndroidUtilities.hasDialogOnTop(sheet[0].attachedFragment) && sheet[0] != null && sheet[0].attachedFragment != null) {
-                            sheet1.makeAttached(sheet[0].attachedFragment);
-                        }
-                        sheet1.show();
-                    }), true)
+                    getString(R.string.GiftStarsSubtitleLinkName).replace(' ', ' ')
                 ));
                 linearLayout.addView(textView, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.CENTER, 36, 0, 36, 4));
             } else if (transaction.description != null && transaction.extended_media.isEmpty()) {
