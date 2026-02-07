@@ -14569,6 +14569,11 @@ public class MessagesController extends BaseController implements NotificationCe
         if (user == null) {
             return;
         }
+        if (BuildVars.RESTRICTED_BUILD) {
+            BaseFragment fragment = LaunchActivity.getLastFragment();
+            AndroidUtilities.runOnUIThread(() -> AlertsCreator.showSimpleAlert(fragment, "Недоступно в ограниченной врсии"));
+            return;
+        }
         TLRPC.TL_messages_startBot req = new TLRPC.TL_messages_startBot();
         req.bot = getInputUser(user);
         req.peer = getInputPeer(user.id);
@@ -14710,6 +14715,16 @@ public class MessagesController extends BaseController implements NotificationCe
                 request = req;
             }
         } else {
+            if (BuildVars.RESTRICTED_BUILD) {
+                AndroidUtilities.runOnUIThread(() -> AlertsCreator.showSimpleAlert(fragment, "Недоступно в ограниченной врсии"));
+                if (onError != null) {
+                    onError.run(null);
+                }
+                if (processInvitedUsers != null) {
+                    processInvitedUsers.run(null);
+                }
+                return;
+            }
             TLRPC.TL_messages_startBot req = new TLRPC.TL_messages_startBot();
             req.bot = inputUser;
             if (isChannel) {
@@ -21178,6 +21193,10 @@ public class MessagesController extends BaseController implements NotificationCe
         }
         if (reason != null) {
             showCantOpenAlert(fragment, reason);
+            return false;
+        }
+        if (BuildVars.RESTRICTED_BUILD && chat != null && ChatObject.isNotInChat(chat)) {
+            AlertsCreator.showSimpleAlert(fragment, "Недоступно в ограниченной врсии");
             return false;
         }
         if (messageId != 0 && originalMessage != null && chat != null && chat.access_hash == 0) {
