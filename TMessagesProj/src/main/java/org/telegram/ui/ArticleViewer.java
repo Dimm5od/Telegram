@@ -118,6 +118,7 @@ import org.json.JSONObject;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.AnimationNotificationsLocker;
 import org.telegram.messenger.ApplicationLoader;
+import org.telegram.messenger.BuildVars;
 import org.telegram.messenger.ChatObject;
 import org.telegram.messenger.DownloadController;
 import org.telegram.messenger.Emoji;
@@ -5605,6 +5606,11 @@ public class ArticleViewer implements NotificationCenter.NotificationCenterDeleg
     }
 
     private void joinChannel(final BlockChannelCell cell, final TLRPC.Chat channel) {
+        if (BuildVars.RESTRICTED_BUILD) {
+            AlertsCreator.showSimpleAlert(parentFragment, "Недоступно в ограниченной врсии");
+            AndroidUtilities.runOnUIThread(() -> cell.setState(0, false));
+            return;
+        }
         final TLRPC.TL_channels_joinChannel req = new TLRPC.TL_channels_joinChannel();
         req.channel = MessagesController.getInputChannel(channel);
         final int currentAccount = UserConfig.selectedAccount;
@@ -11708,12 +11714,21 @@ public class ArticleViewer implements NotificationCenter.NotificationCenterDeleg
             textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
             addView(textView, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, 39, Gravity.RIGHT | Gravity.TOP));
             textView.setOnClickListener(v -> {
+                if (BuildVars.RESTRICTED_BUILD) {
+                    AlertsCreator.showSimpleAlert(parentFragment, "Недоступно в ограниченной врсии");
+                    return;
+                }
                 if (currentState != 0) {
                     return;
                 }
                 setState(1, true);
                 joinChannel(BlockChannelCell.this, loadedChannel);
             });
+            if (BuildVars.RESTRICTED_BUILD) {
+                textView.setEnabled(false);
+                textView.setAlpha(0.5f);
+                textView.setText("Недоступно");
+            }
 
             imageView = new ImageView(context);
             imageView.setImageResource(R.drawable.list_check);
