@@ -5373,7 +5373,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
                         FileLog.e(e);
                     }
                     BaseFragment fragment = getSafeLastFragment();
-                    AlertsCreator.showSimpleAlert(fragment, "Недоступно в ограниченной врсии");
+                    AlertsCreator.showSimpleAlert(fragment, "Для подписки на этот канал/группу/бота обратись к родителям");
                     return;
                 }
                 TLRPC.TL_messages_importChatInvite req = new TLRPC.TL_messages_importChatInvite();

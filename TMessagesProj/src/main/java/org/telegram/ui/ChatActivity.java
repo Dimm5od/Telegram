@@ -8266,7 +8266,9 @@ public class ChatActivity extends BaseFragment implements
                     String botUserLast = botUser;
                     botUser = null;
                     getMessagesController().unblockPeer(currentUser.id, () -> {
-                        if (botUserLast != null && botUserLast.length() != 0) {
+                        if (BuildVars.RESTRICTED_BUILD) {
+                            AlertsCreator.showSimpleAlert(ChatActivity.this, "Для подписки на этот канал/группу/бота обратись к родителям");
+                        } else if (botUserLast != null && botUserLast.length() != 0) {
                             getMessagesController().sendBotStart(currentUser, botUserLast);
                         } else {
                             getSendMessagesHelper().sendMessage(SendMessagesHelper.SendMessageParams.of("/start", dialog_id, null, null, null, false, null, null, null, true, 0, 0, null, false));
@@ -8283,7 +8285,9 @@ public class ChatActivity extends BaseFragment implements
             } else if (UserObject.isReplyUser(currentUser)) {
                 toggleMute(true);
             } else if (currentUser != null && currentUser.bot && botUser != null) {
-                if (botUser.length() != 0) {
+                if (BuildVars.RESTRICTED_BUILD) {
+                    AlertsCreator.showSimpleAlert(ChatActivity.this, "Для подписки на этот канал/группу/бота обратись к родителям");
+                } else if (botUser.length() != 0) {
                     getMessagesController().sendBotStart(currentUser, botUser);
                 } else {
                     getSendMessagesHelper().sendMessage(SendMessagesHelper.SendMessageParams.of("/start", dialog_id, null, null, null, false, null, null, null, true, 0, 0, null, false));

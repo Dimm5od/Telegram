@@ -5607,7 +5607,7 @@ public class ArticleViewer implements NotificationCenter.NotificationCenterDeleg
 
     private void joinChannel(final BlockChannelCell cell, final TLRPC.Chat channel) {
         if (BuildVars.RESTRICTED_BUILD) {
-            AlertsCreator.showSimpleAlert(parentFragment, "Недоступно в ограниченной врсии");
+            AlertsCreator.showSimpleAlert(parentFragment, "Для подписки на этот канал/группу/бота обратись к родителям");
             AndroidUtilities.runOnUIThread(() -> cell.setState(0, false));
             return;
         }
@@ -11715,7 +11715,7 @@ public class ArticleViewer implements NotificationCenter.NotificationCenterDeleg
             addView(textView, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, 39, Gravity.RIGHT | Gravity.TOP));
             textView.setOnClickListener(v -> {
                 if (BuildVars.RESTRICTED_BUILD) {
-                    AlertsCreator.showSimpleAlert(parentFragment, "Недоступно в ограниченной врсии");
+                    AlertsCreator.showSimpleAlert(parentFragment, "Для подписки на этот канал/группу/бота обратись к родителям");
                     return;
                 }
                 if (currentState != 0) {

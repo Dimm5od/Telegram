@@ -14571,7 +14571,7 @@ public class MessagesController extends BaseController implements NotificationCe
         }
         if (BuildVars.RESTRICTED_BUILD) {
             BaseFragment fragment = LaunchActivity.getLastFragment();
-            AndroidUtilities.runOnUIThread(() -> AlertsCreator.showSimpleAlert(fragment, "Недоступно в ограниченной врсии"));
+            AndroidUtilities.runOnUIThread(() -> AlertsCreator.showSimpleAlert(fragment, "Для подписки на этот канал/группу/бота обратись к родителям"));
             return;
         }
         TLRPC.TL_messages_startBot req = new TLRPC.TL_messages_startBot();
@@ -14682,7 +14682,7 @@ public class MessagesController extends BaseController implements NotificationCe
             if (isChannel) {
                 if (inputUser instanceof TLRPC.TL_inputUserSelf) {
                     if (BuildVars.RESTRICTED_BUILD) {
-                        AndroidUtilities.runOnUIThread(() -> AlertsCreator.showSimpleAlert(fragment, "Недоступно в ограниченной врсии"));
+                        AndroidUtilities.runOnUIThread(() -> AlertsCreator.showSimpleAlert(fragment, "Для подписки на этот канал/группу/бота обратись к родителям"));
                         if (onError != null) {
                             onError.run(null);
                         }
@@ -14716,7 +14716,7 @@ public class MessagesController extends BaseController implements NotificationCe
             }
         } else {
             if (BuildVars.RESTRICTED_BUILD) {
-                AndroidUtilities.runOnUIThread(() -> AlertsCreator.showSimpleAlert(fragment, "Недоступно в ограниченной врсии"));
+                AndroidUtilities.runOnUIThread(() -> AlertsCreator.showSimpleAlert(fragment, "Для подписки на этот канал/группу/бота обратись к родителям"));
                 if (onError != null) {
                     onError.run(null);
                 }
@@ -21196,7 +21196,7 @@ public class MessagesController extends BaseController implements NotificationCe
             return false;
         }
         if (BuildVars.RESTRICTED_BUILD && chat != null && ChatObject.isNotInChat(chat)) {
-            AlertsCreator.showSimpleAlert(fragment, "Недоступно в ограниченной врсии");
+            AlertsCreator.showSimpleAlert(fragment, "Для подписки на этот канал/группу/бота обратись к родителям");
             return false;
         }
         if (messageId != 0 && originalMessage != null && chat != null && chat.access_hash == 0) {

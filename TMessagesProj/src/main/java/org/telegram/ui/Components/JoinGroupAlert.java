@@ -197,7 +197,7 @@ public class JoinGroupAlert extends BottomSheet {
             requestTextView.setTypeface(AndroidUtilities.bold());
             requestTextView.setOnClickListener((view) -> {
                 if (restrictedBuild) {
-                    AlertsCreator.showSimpleAlert(fragment, "Недоступно в ограниченной врсии");
+                    AlertsCreator.showSimpleAlert(fragment, "Для подписки на этот канал/группу/бота обратись к родителям");
                     return;
                 }
                 AndroidUtilities.runOnUIThread(() -> {
@@ -327,7 +327,7 @@ public class JoinGroupAlert extends BottomSheet {
             }
             joinTextView.setOnClickListener(v -> {
                 if (restrictedBuild) {
-                    AlertsCreator.showSimpleAlert(fragment, "Недоступно в ограниченной врсии");
+                    AlertsCreator.showSimpleAlert(fragment, "Для подписки на этот канал/группу/бота обратись к родителям");
                     return;
                 }
                 dismiss();
