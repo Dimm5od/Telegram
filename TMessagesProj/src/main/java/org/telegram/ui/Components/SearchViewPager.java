@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.telegram.messenger.AccountInstance;
 import org.telegram.messenger.AndroidUtilities;
+import org.telegram.messenger.BuildVars;
 import org.telegram.messenger.ChatObject;
 import org.telegram.messenger.DialogObject;
 import org.telegram.messenger.LocaleController;
@@ -1330,7 +1331,14 @@ public class SearchViewPager extends ViewPagerFixed implements FilteredSearchVie
     }
 
     public void showDownloads() {
-        setPosition((expandedPublicPosts ? 1 : 0) + 5);
+        int downloadsPosition = viewPagerAdapter.getPositionForItemType(ViewPagerAdapter.DOWNLOADS_TYPE);
+        if (downloadsPosition >= 0) {
+            setPosition(downloadsPosition);
+        }
+    }
+
+    public boolean isDownloadsTabSelected() {
+        return viewPagerAdapter.getPositionForItemType(ViewPagerAdapter.DOWNLOADS_TYPE) == getCurrentPosition();
     }
 
     public int getPositionForType(int initialSearchType) {
@@ -1346,13 +1354,13 @@ public class SearchViewPager extends ViewPagerFixed implements FilteredSearchVie
 
         ArrayList<Item> items = new ArrayList<>();
 
-        private final static int DIALOGS_TYPE = 0;
-        private final static int CHANNELS_TYPE = 1;
-        private final static int DOWNLOADS_TYPE = 2;
-        private final static int FILTER_TYPE = 3;
-        private final static int BOTS_TYPE = 4;
-        private final static int PUBLIC_POSTS_TYPE = 5;
-        private final static int POSTS_TYPE = 6;
+        static final int DIALOGS_TYPE = 0;
+        static final int CHANNELS_TYPE = 1;
+        static final int DOWNLOADS_TYPE = 2;
+        static final int FILTER_TYPE = 3;
+        static final int BOTS_TYPE = 4;
+        static final int PUBLIC_POSTS_TYPE = 5;
+        static final int POSTS_TYPE = 6;
 
         public ViewPagerAdapter() {
             updateItems();
@@ -1361,12 +1369,14 @@ public class SearchViewPager extends ViewPagerFixed implements FilteredSearchVie
         public void updateItems() {
             items.clear();
             items.add(new Item(DIALOGS_TYPE));
-            if (expandedPublicPosts) {
-                items.add(new Item(PUBLIC_POSTS_TYPE));
+            if (!BuildVars.RESTRICTED_BUILD) {
+                if (expandedPublicPosts) {
+                    items.add(new Item(PUBLIC_POSTS_TYPE));
+                }
+                items.add(new Item(CHANNELS_TYPE));
+                items.add(new Item(BOTS_TYPE));
+                items.add(new Item(POSTS_TYPE));
             }
-            items.add(new Item(CHANNELS_TYPE));
-            items.add(new Item(BOTS_TYPE));
-            items.add(new Item(POSTS_TYPE));
             if (!showOnlyDialogsAdapter) {
                 Item item = new Item(FILTER_TYPE);
                 item.filterIndex = 0;
@@ -1387,6 +1397,15 @@ public class SearchViewPager extends ViewPagerFixed implements FilteredSearchVie
                 item.filterIndex = 4;
                 items.add(item);
             }
+        }
+
+        public int getPositionForItemType(int type) {
+            for (int i = 0; i < items.size(); i++) {
+                if (items.get(i).type == type) {
+                    return i;
+                }
+            }
+            return -1;
         }
 
         @Override
