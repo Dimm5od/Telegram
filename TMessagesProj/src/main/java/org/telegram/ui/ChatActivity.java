@@ -8289,6 +8289,7 @@ public class ChatActivity extends BaseFragment implements
             } else if (currentUser != null && currentUser.bot && botUser != null) {
                 if (BuildVars.RESTRICTED_BUILD) {
                     AlertsCreator.showSimpleAlert(ChatActivity.this, "Для подписки на этот канал/группу/бота обратись к родителям");
+                    return;
                 } else if (botUser.length() != 0) {
                     getMessagesController().sendBotStart(currentUser, botUser);
                 } else {
