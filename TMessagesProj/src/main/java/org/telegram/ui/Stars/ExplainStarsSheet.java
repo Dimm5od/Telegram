@@ -27,7 +27,6 @@ import org.telegram.ui.Components.Premium.GLIcon.GLIconTextureView;
 import org.telegram.ui.Components.Premium.GLIcon.Icon3D;
 import org.telegram.ui.Components.Premium.StarParticlesView;
 import org.telegram.ui.Components.RecyclerListView;
-import org.telegram.ui.Components.StarAppsSheet;
 import org.telegram.ui.Components.UItem;
 import org.telegram.ui.Components.UniversalAdapter;
 import org.telegram.ui.Components.UniversalRecyclerView;
@@ -115,9 +114,7 @@ public class ExplainStarsSheet extends BottomSheetWithRecyclerListView {
     public void fillItems(ArrayList<UItem> items, UniversalAdapter adapter) {
         items.add(UItem.asCustom(headerView));
         items.add(FeatureCell.Factory.of(R.drawable.msg_gift_premium, getString(R.string.ExplainStarsFeature1Title), getString(R.string.ExplainStarsFeature1Text)));
-        items.add(FeatureCell.Factory.of(R.drawable.msg_bot, getString(R.string.ExplainStarsFeature2Title), AndroidUtilities.replaceArrows(AndroidUtilities.replaceSingleTag(getString(R.string.ExplainStarsFeature2Text), () -> {
-            new StarAppsSheet(getContext()).show();
-        }), true)));
+        items.add(FeatureCell.Factory.of(R.drawable.msg_bot, getString(R.string.ExplainStarsFeature2Title), getString(R.string.ExplainStarsFeature2Text)));
         items.add(FeatureCell.Factory.of(R.drawable.menu_unlock, getString(R.string.ExplainStarsFeature3Title), getString(R.string.ExplainStarsFeature3Text)));
         items.add(FeatureCell.Factory.of(R.drawable.menu_feature_paid, getString(R.string.ExplainStarsFeature4Title), getString(R.string.ExplainStarsFeature4Text)));
         items.add(UItem.asSpace(dp(10 + 48 + 10)));
