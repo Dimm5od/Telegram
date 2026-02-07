@@ -411,7 +411,7 @@ public class Browser {
             FileLog.e(e);
         }
         try {
-            final boolean inappBrowser = (
+            final boolean inappBrowser = !BuildVars.RESTRICTED_BUILD && (
                 allowInAppBrowser && BubbleActivity.instance == null &&
                 SharedConfig.inappBrowser &&
                 TextUtils.isEmpty(browserPackage) &&
@@ -476,6 +476,9 @@ public class Browser {
     }
 
     public static boolean openInTelegramBrowser(Context context, String url, Browser.Progress progress) {
+        if (BuildVars.RESTRICTED_BUILD) {
+            return openInExternalBrowser(context, url, false);
+        }
         if (LaunchActivity.instance != null) {
             BottomSheetTabs tabs = LaunchActivity.instance.getBottomSheetTabs();
             if (tabs != null && tabs.tryReopenTab(url) != null) {
