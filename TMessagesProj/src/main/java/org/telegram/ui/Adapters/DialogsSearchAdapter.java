@@ -1123,32 +1123,14 @@ public class DialogsSearchAdapter extends RecyclerListView.SelectionAdapter {
         }
         filterRecent(query);
         if (!TextUtils.equals(sponsoredQuery, query)) {
-            sponsoredQuery = query;
-            sponsoredPeers.clear();
+            sponsoredQuery = null;
             if (sponsoredReqId != 0) {
                 ConnectionsManager.getInstance(currentAccount).cancelRequest(sponsoredReqId, true);
                 sponsoredReqId = 0;
             }
-            if (query == null || query.length() < 4 || UserConfig.getInstance(currentAccount).isPremium() && MessagesController.getInstance(currentAccount).isSponsoredDisabled()) {
-                sponsoredQuery = null;
-            } else {
-                final TLRPC.TL_contacts_getSponsoredPeers req = new TLRPC.TL_contacts_getSponsoredPeers();
-                req.q = sponsoredQuery = query;
-                sponsoredReqId = ConnectionsManager.getInstance(currentAccount).sendRequest(req, (res, err) -> AndroidUtilities.runOnUIThread(() -> {
-                    sponsoredReqId = 0;
-                    if (res instanceof TLRPC.TL_contacts_sponsoredPeersEmpty) {
-                        if (!sponsoredPeers.isEmpty()) {
-                            sponsoredPeers.clear();
-                            notifyDataSetChanged();
-                        }
-                    } else if (res instanceof TLRPC.TL_contacts_sponsoredPeers) {
-                        final TLRPC.TL_contacts_sponsoredPeers r = (TLRPC.TL_contacts_sponsoredPeers) res;
-                        MessagesController.getInstance(currentAccount).putUsers(r.users, true);
-                        MessagesController.getInstance(currentAccount).putChats(r.chats, true);
-                        sponsoredPeers.addAll(r.peers);
-                        notifyDataSetChanged();
-                    }
-                }));
+            if (!sponsoredPeers.isEmpty()) {
+                sponsoredPeers.clear();
+                notifyDataSetChanged();
             }
         }
         if (TextUtils.isEmpty(query)) {
