@@ -1333,6 +1333,13 @@ public class BotWebViewSheet extends Dialog implements NotificationCenter.Notifi
     Drawable verifiedDrawable;
 
     public void requestWebView(BaseFragment fragment, WebViewRequestProps props) {
+        if (!MessagesController.areBotMiniAppsEnabled()) {
+            if (fragment != null) {
+                fragment.presentFragment(ChatActivity.of(props.botId));
+            }
+            return;
+        }
+
         this.requestProps = props;
         this.currentAccount = props.currentAccount;
         this.peerId = props.peerId;

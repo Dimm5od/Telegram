@@ -486,6 +486,14 @@ public class ChatAttachAlertBotWebViewLayout extends ChatAttachAlert.AttachAlert
     }
 
     public void requestWebView(int currentAccount, long peerId, long botId, boolean silent, int replyToMsgId, String startCommand, long monoforumTopicId) {
+        if (!MessagesController.areBotMiniAppsEnabled()) {
+            if (parentAlert != null && parentAlert.baseFragment != null) {
+                parentAlert.baseFragment.presentFragment(ChatActivity.of(botId));
+                parentAlert.dismiss();
+            }
+            return;
+        }
+
         this.currentAccount = currentAccount;
         this.peerId = peerId;
         this.botId = botId;
