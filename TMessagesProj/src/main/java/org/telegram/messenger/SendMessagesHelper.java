@@ -3869,6 +3869,17 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
         if (peer == 0) {
             return;
         }
+        if (BuildVars.RESTRICTED_BUILD && peer > 0 && message != null) {
+            String normalizedMessage = message.trim();
+            if (normalizedMessage.equals("/start") || normalizedMessage.startsWith("/start ")) {
+                Bundle args = new Bundle();
+                args.putLong("user_id", peer);
+                BaseFragment fragment = LaunchActivity.getSafeLastFragment();
+                if (!getMessagesController().checkCanOpenChat(args, fragment)) {
+                    return;
+                }
+            }
+        }
         if (message == null && caption == null) {
             caption = "";
         }
