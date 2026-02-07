@@ -229,7 +229,7 @@ public class SearchAdapterHelper {
                                         globalSearch.add(chat);
                                         globalSearchMap.put(-chat.id, chat);
                                     } else if (user != null) {
-                                        if (canAddGroupsOnly || !allowBots && user.bot || !allowSelf && user.self || !allowGlobalResults && b == 1 && !user.contact || !filter(user)) {
+                                        if (canAddGroupsOnly || !allowBots && user.bot || !allowSelf && user.self || !allowGlobalResults && b == 1 && user.bot && !user.contact || !filter(user)) {
                                             continue;
                                         }
                                         globalSearch.add(user);
