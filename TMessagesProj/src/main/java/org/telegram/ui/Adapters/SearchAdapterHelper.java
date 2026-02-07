@@ -177,9 +177,13 @@ public class SearchAdapterHelper {
             hasChanged = true;
         }
         if (allowUsername) {
-            if (query.length() > 0) {
+            String usernameQuery = query;
+            if (usernameQuery.startsWith("@")) {
+                usernameQuery = usernameQuery.substring(1);
+            }
+            if (usernameQuery.length() > 0) {
                 TLRPC.TL_contacts_search req = new TLRPC.TL_contacts_search();
-                req.q = query;
+                req.q = usernameQuery;
                 req.limit = 20;
                 requests.add(new Pair<>(req, (response, error) -> {
                     if (delegate.canApplySearchResults(searchId)) {
@@ -264,7 +268,7 @@ public class SearchAdapterHelper {
                                     }
                                 }
                             }
-                            lastFoundUsername = query.toLowerCase();
+                            lastFoundUsername = usernameQuery.toLowerCase();
                         }
                     }
                 }));
