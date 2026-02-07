@@ -21328,6 +21328,9 @@ public class MessagesController extends BaseController implements NotificationCe
             } else {
                 args.putLong("user_id", user.id);
             }
+            if (!checkCanOpenChat(args, fragment)) {
+                return;
+            }
             if (type == 0) {
                 fragment.presentFragment(new ProfileActivity(args));
             } else if (type == 2) {
