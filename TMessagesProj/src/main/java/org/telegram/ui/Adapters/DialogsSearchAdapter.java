@@ -34,6 +34,7 @@ import org.telegram.SQLite.SQLiteCursor;
 import org.telegram.SQLite.SQLitePreparedStatement;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.ChatObject;
+import org.telegram.messenger.BuildVars;
 import org.telegram.messenger.ContactsController;
 import org.telegram.messenger.DialogObject;
 import org.telegram.messenger.FileLog;
@@ -1161,7 +1162,7 @@ public class DialogsSearchAdapter extends RecyclerListView.SelectionAdapter {
             publicPostsHashtag = null;
             publicPosts.clear();
             searchAdapterHelper.mergeResults(null, null);
-            if (dialogsType != DialogsActivity.DIALOGS_TYPE_BOT_REQUEST_PEER) {
+            if (dialogsType != DialogsActivity.DIALOGS_TYPE_BOT_REQUEST_PEER && !BuildVars.RESTRICTED_BUILD) {
                 searchAdapterHelper.queryServerSearch(
                     null,
                     true,
@@ -1265,7 +1266,7 @@ public class DialogsSearchAdapter extends RecyclerListView.SelectionAdapter {
                     if (searchId != lastSearchId) {
                         return;
                     }
-                    if (needMessagesSearch != 2 && dialogsType != DialogsActivity.DIALOGS_TYPE_GROUPS_ONLY && dialogsType != DialogsActivity.DIALOGS_TYPE_CHANNELS_ONLY && delegate.getSearchForumDialogId() == 0) {
+                    if (!BuildVars.RESTRICTED_BUILD && needMessagesSearch != 2 && dialogsType != DialogsActivity.DIALOGS_TYPE_GROUPS_ONLY && dialogsType != DialogsActivity.DIALOGS_TYPE_CHANNELS_ONLY && delegate.getSearchForumDialogId() == 0) {
                         searchAdapterHelper.queryServerSearch(
                             query,
                             true,

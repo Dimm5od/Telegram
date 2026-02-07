@@ -43,6 +43,9 @@ public class BuildVars {
     // works only on official app ids, disable on your forks
     public static boolean SUPPORTS_PASSKEYS = true;
 
+    // Single source of truth for feature-limited builds.
+    public static final boolean RESTRICTED_BUILD = BuildConfig.RESTRICTED_BUILD;
+
     static {
         if (ApplicationLoader.applicationContext != null) {
             SharedPreferences sharedPreferences = ApplicationLoader.applicationContext.getSharedPreferences("systemConfig", Context.MODE_PRIVATE);
