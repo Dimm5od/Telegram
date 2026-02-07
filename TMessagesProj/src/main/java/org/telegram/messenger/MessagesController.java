@@ -23023,6 +23023,24 @@ public class MessagesController extends BaseController implements NotificationCe
     private long contentSettingsLoadedTime;
     private TL_account.contentSettings contentSettings;
 
+    private void enforceSensitiveContentDisabled(boolean syncWithServer) {
+        if (contentSettings != null) {
+            contentSettings.sensitive_enabled = false;
+        }
+        if (ignoreRestrictionReasons == null) {
+            ignoreRestrictionReasons = new HashSet<>();
+        }
+        ignoreRestrictionReasons.remove("sensitive");
+        if (mainPreferences != null) {
+            mainPreferences.edit().putStringSet("ignoreRestrictionReasons", ignoreRestrictionReasons).apply();
+        }
+        if (syncWithServer) {
+            TL_account.setContentSettings req = new TL_account.setContentSettings();
+            req.sensitive_enabled = false;
+            getConnectionsManager().sendRequest(req, null);
+        }
+    }
+
     public TL_account.contentSettings getContentSettings() {
         return contentSettings;
     }
@@ -23045,12 +23063,10 @@ public class MessagesController extends BaseController implements NotificationCe
                 contentSettingsLoadedTime = System.currentTimeMillis();
             }
             contentSettingsLoading = false;
-            if (contentSettings != null && ignoreRestrictionReasons != null) {
-                if (contentSettings.sensitive_enabled) ignoreRestrictionReasons.add("sensitive");
-                else ignoreRestrictionReasons.remove("sensitive");
-                if (mainPreferences != null) {
-                    mainPreferences.edit().putStringSet("ignoreRestrictionReasons", ignoreRestrictionReasons).apply();
-                }
+            if (contentSettings != null && contentSettings.sensitive_enabled) {
+                enforceSensitiveContentDisabled(true);
+            } else {
+                enforceSensitiveContentDisabled(false);
             }
             if (contentSettingsCallbacks != null) {
                 for (Utilities.Callback<TL_account.contentSettings> callback : contentSettingsCallbacks) {
@@ -23069,22 +23085,10 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     public void setContentSettings(boolean showSensitiveContent) {
-        if (contentSettings != null) {
-            if (!contentSettings.sensitive_can_change) {
-                return;
-            }
-            contentSettings.sensitive_enabled = showSensitiveContent;
-        }
-
-        if (ignoreRestrictionReasons == null) ignoreRestrictionReasons = new HashSet<>();
-        if (showSensitiveContent) ignoreRestrictionReasons.add("sensitive");
-        else ignoreRestrictionReasons.remove("sensitive");
-        if (mainPreferences != null) {
-            mainPreferences.edit().putStringSet("ignoreRestrictionReasons", ignoreRestrictionReasons).apply();
-        }
+        enforceSensitiveContentDisabled(false);
 
         TL_account.setContentSettings req = new TL_account.setContentSettings();
-        req.sensitive_enabled = showSensitiveContent;
+        req.sensitive_enabled = false;
         getConnectionsManager().sendRequest(req, (res, err) -> AndroidUtilities.runOnUIThread(() -> {
             if (err != null) {
                 BulletinFactory.showError(err);
@@ -23093,10 +23097,7 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     public boolean showSensitiveContent() {
-        if (contentSettings != null && System.currentTimeMillis() - contentSettingsLoadedTime < 1000 * 60 * 60) {
-            return contentSettings.sensitive_enabled;
-        }
-        return ignoreRestrictionReasons == null || ignoreRestrictionReasons.contains("sensitive");
+        return false;
     }
 
     private boolean loadingArePaidReactionsAnonymous;
