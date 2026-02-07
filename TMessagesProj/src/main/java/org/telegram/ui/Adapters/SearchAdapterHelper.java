@@ -185,7 +185,7 @@ public class SearchAdapterHelper {
                 final String finalUsernameQuery = usernameQuery;
                 TLRPC.TL_contacts_search req = new TLRPC.TL_contacts_search();
                 req.q = finalUsernameQuery;
-                req.limit = 20;
+                req.limit = allowGlobalResults ? 20 : 100;
                 requests.add(new Pair<>(req, (response, error) -> {
                     if (delegate.canApplySearchResults(searchId)) {
                         if (error == null) {
