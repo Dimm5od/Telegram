@@ -21195,6 +21195,10 @@ public class MessagesController extends BaseController implements NotificationCe
             showCantOpenAlert(fragment, reason);
             return false;
         }
+        if (BuildVars.RESTRICTED_BUILD && user != null && user.bot && (blockePeers.indexOfKey(user.id) >= 0 || getDialog(user.id) == null)) {
+            AlertsCreator.showSimpleAlert(fragment, "Для активации этого бота обратись к родителям");
+            return false;
+        }
         if (BuildVars.RESTRICTED_BUILD && chat != null && ChatObject.isNotInChat(chat)) {
             AlertsCreator.showSimpleAlert(fragment, "Для подписки на этот канал/группу/бота обратись к родителям");
             return false;

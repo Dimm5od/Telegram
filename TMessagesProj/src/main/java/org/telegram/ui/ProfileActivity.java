@@ -6120,12 +6120,12 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     getNotificationCenter().postNotificationName(NotificationCenter.needDeleteDialog, dialogId, user, currentChat, param);
                 }, getResourceProvider());
             } else {
+                if (BuildVars.RESTRICTED_BUILD) {
+                    AlertsCreator.showSimpleAlert(ProfileActivity.this, "Для активации этого бота обратись к родителям");
+                    return;
+                }
                 getMessagesController().unblockPeer(userId, () -> {
-                    if (BuildVars.RESTRICTED_BUILD) {
-                        AlertsCreator.showSimpleAlert(ProfileActivity.this, "Для подписки на этот канал/группу/бота обратись к родителям");
-                    } else {
-                        getSendMessagesHelper().sendMessage(SendMessagesHelper.SendMessageParams.of("/start", userId, null, null, null, false, null, null, null, true, 0, 0, null, false));
-                    }
+                    getSendMessagesHelper().sendMessage(SendMessagesHelper.SendMessageParams.of("/start", userId, null, null, null, false, null, null, null, true, 0, 0, null, false));
                 });
                 finishFragment();
             }
