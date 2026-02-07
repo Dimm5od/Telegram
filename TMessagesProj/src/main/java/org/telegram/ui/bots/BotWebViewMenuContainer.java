@@ -883,6 +883,14 @@ public class BotWebViewMenuContainer extends FrameLayout implements Notification
      */
     public void show(int currentAccount, long botId, String botUrl) {
         dismissed = false;
+        if (!MessagesController.areBotMiniAppsEnabled()) {
+            ChatActivity targetChatActivity = parentEnterView != null ? parentEnterView.getParentFragment() : null;
+            if (targetChatActivity != null) {
+                targetChatActivity.presentFragment(ChatActivity.of(botId));
+            }
+            dismiss(true);
+            return;
+        }
         if (this.currentAccount != currentAccount || this.botId != botId || !Objects.equals(this.botUrl, botUrl)) {
             isLoaded = false;
         }

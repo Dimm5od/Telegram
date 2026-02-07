@@ -22925,11 +22925,27 @@ public class MessagesController extends BaseController implements NotificationCe
     public void openApp(TLRPC.User bot, int classGuid) {
         openApp(null, bot, null, classGuid, null);
     }
+
+    public static boolean areBotMiniAppsEnabled() {
+        return false;
+    }
+
     public void openApp(BaseFragment _fragment, TLRPC.User bot, String param, int classGuid, Browser.Progress progress) {
         openApp(_fragment, bot, param, classGuid, progress, false, false);
     }
     public void openApp(BaseFragment _fragment, TLRPC.User bot, String param, int classGuid, Browser.Progress progress, boolean botCompact, boolean botFullscreen) {
         if (bot == null) return;
+
+        if (!areBotMiniAppsEnabled()) {
+            BaseFragment fragment = _fragment != null ? _fragment : LaunchActivity.getSafeLastFragment();
+            if (fragment != null) {
+                fragment.presentFragment(ChatActivity.of(bot.id));
+            }
+            if (progress != null) {
+                progress.end();
+            }
+            return;
+        }
 
         boolean[] cancelled = new boolean[] { false };
         if (progress != null) {
