@@ -8263,12 +8263,14 @@ public class ChatActivity extends BaseFragment implements
                 toggleMute(true);
             } else if (currentUser != null && userBlocked) {
                 if (currentUser.bot) {
+                    if (BuildVars.RESTRICTED_BUILD) {
+                        AlertsCreator.showSimpleAlert(ChatActivity.this, "Для активации этого бота обратись к родителям");
+                        return;
+                    }
                     String botUserLast = botUser;
                     botUser = null;
                     getMessagesController().unblockPeer(currentUser.id, () -> {
-                        if (BuildVars.RESTRICTED_BUILD) {
-                            AlertsCreator.showSimpleAlert(ChatActivity.this, "Для подписки на этот канал/группу/бота обратись к родителям");
-                        } else if (botUserLast != null && botUserLast.length() != 0) {
+                        if (botUserLast != null && botUserLast.length() != 0) {
                             getMessagesController().sendBotStart(currentUser, botUserLast);
                         } else {
                             getSendMessagesHelper().sendMessage(SendMessagesHelper.SendMessageParams.of("/start", dialog_id, null, null, null, false, null, null, null, true, 0, 0, null, false));
