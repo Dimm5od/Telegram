@@ -182,8 +182,9 @@ public class SearchAdapterHelper {
                 usernameQuery = usernameQuery.substring(1);
             }
             if (usernameQuery.length() > 0) {
+                final String finalUsernameQuery = usernameQuery;
                 TLRPC.TL_contacts_search req = new TLRPC.TL_contacts_search();
-                req.q = usernameQuery;
+                req.q = finalUsernameQuery;
                 req.limit = 20;
                 requests.add(new Pair<>(req, (response, error) -> {
                     if (delegate.canApplySearchResults(searchId)) {
@@ -268,7 +269,7 @@ public class SearchAdapterHelper {
                                     }
                                 }
                             }
-                            lastFoundUsername = usernameQuery.toLowerCase();
+                            lastFoundUsername = finalUsernameQuery.toLowerCase();
                         }
                     }
                 }));
