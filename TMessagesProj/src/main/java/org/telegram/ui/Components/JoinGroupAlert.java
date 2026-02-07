@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.ChatObject;
+import org.telegram.messenger.BuildVars;
 import org.telegram.messenger.FileLoader;
 import org.telegram.messenger.ImageLocation;
 import org.telegram.messenger.LocaleController;
@@ -148,6 +149,7 @@ public class JoinGroupAlert extends BottomSheet {
 
         final boolean isChannel = chatInvite != null && (chatInvite.channel && !chatInvite.megagroup || ChatObject.isChannelAndNotMegaGroup(chatInvite.chat)) || ChatObject.isChannel(currentChat) && !currentChat.megagroup;
         boolean hasAbout = !TextUtils.isEmpty(about);
+        boolean restrictedBuild = BuildVars.RESTRICTED_BUILD;
 
         TextView textView = new TextView(context);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
@@ -194,6 +196,10 @@ public class JoinGroupAlert extends BottomSheet {
             requestTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
             requestTextView.setTypeface(AndroidUtilities.bold());
             requestTextView.setOnClickListener((view) -> {
+                if (restrictedBuild) {
+                    AlertsCreator.showSimpleAlert(fragment, "Недоступно в ограниченной врсии");
+                    return;
+                }
                 AndroidUtilities.runOnUIThread(() -> {
                     if (!isDismissed()) {
                         requestTextView.setVisibility(View.INVISIBLE);
@@ -238,6 +244,11 @@ public class JoinGroupAlert extends BottomSheet {
                 }
             });
             requestFrameLayout.addView(requestTextView, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 48, Gravity.START, 14, 0, 14, 0));
+            if (restrictedBuild) {
+                requestTextView.setEnabled(false);
+                requestTextView.setAlpha(0.5f);
+                requestTextView.setText("Недоступно");
+            }
 
             TextView descriptionTextView = new TextView(getContext());
             descriptionTextView.setGravity(Gravity.CENTER);
@@ -309,7 +320,16 @@ public class JoinGroupAlert extends BottomSheet {
             joinTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
             joinTextView.setTypeface(AndroidUtilities.bold());
             linearLayout.addView(joinTextView, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 48, Gravity.START, 14, 0, 14, 14));
+            if (restrictedBuild) {
+                joinTextView.setEnabled(false);
+                joinTextView.setAlpha(0.5f);
+                joinTextView.setText("Недоступно");
+            }
             joinTextView.setOnClickListener(v -> {
+                if (restrictedBuild) {
+                    AlertsCreator.showSimpleAlert(fragment, "Недоступно в ограниченной врсии");
+                    return;
+                }
                 dismiss();
                 final TLRPC.TL_messages_importChatInvite req = new TLRPC.TL_messages_importChatInvite();
                 req.hash = hash;

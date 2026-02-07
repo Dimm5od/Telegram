@@ -3095,7 +3095,7 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
                 if (inputMedia != null) {
                     request.flags |= 16384;
                     request.media = inputMedia;
-                } else if (!messageObject.editingMessageSearchWebPage) {
+                } else if (BuildVars.RESTRICTED_BUILD || !messageObject.editingMessageSearchWebPage) {
                     request.no_webpage = true;
                 }
                 if (messageObject.scheduled) {
@@ -3113,7 +3113,7 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
                 if (messageObject.editingMessage != null) {
                     request.message = messageObject.editingMessage.toString();
                     request.flags |= 2048;
-                    request.no_webpage = !messageObject.editingMessageSearchWebPage;
+                    request.no_webpage = BuildVars.RESTRICTED_BUILD || !messageObject.editingMessageSearchWebPage;
                     if (messageObject.editingMessageEntities != null) {
                         request.entities = messageObject.editingMessageEntities;
                         request.flags |= 8;
@@ -3182,7 +3182,7 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
         if (message != null) {
             req.message = message;
             req.flags |= 2048;
-            req.no_webpage = !searchLinks;
+            req.no_webpage = BuildVars.RESTRICTED_BUILD || !searchLinks;
         }
         req.id = messageObject.getId();
         if (messageObject.messageOwner != null && (messageObject.messageOwner.flags & 1073741824) != 0) {
@@ -4766,7 +4766,7 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
                         if (newMsg.from_id != null) {
                             reqSend.send_as = getMessagesController().getInputPeer(newMsg.from_id);
                         }
-                        if (!searchLinks) {
+                        if (BuildVars.RESTRICTED_BUILD || !searchLinks) {
                             reqSend.no_webpage = true;
                         }
                         if (entities != null && !entities.isEmpty()) {
