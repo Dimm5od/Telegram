@@ -1475,25 +1475,29 @@ public class SearchViewPager extends ViewPagerFixed implements FilteredSearchVie
 
         @Override
         public int getItemViewType(int position) {
-            if (items.get(position).type == DIALOGS_TYPE) {
+            Item item = items.get(position);
+            if (item.type == DIALOGS_TYPE) {
                 return 1;
             }
-            if (items.get(position).type == CHANNELS_TYPE) {
+            if (item.type == CHANNELS_TYPE) {
                 return 3;
             }
-            if (items.get(position).type == BOTS_TYPE) {
+            if (item.type == BOTS_TYPE) {
                 return 4;
             }
-            if (items.get(position).type == DOWNLOADS_TYPE) {
+            if (item.type == DOWNLOADS_TYPE) {
                 return 2;
             }
-            if (items.get(position).type == PUBLIC_POSTS_TYPE) {
+            if (item.type == PUBLIC_POSTS_TYPE) {
                 return 5;
             }
-            if (items.get(position).type == POSTS_TYPE) {
+            if (item.type == POSTS_TYPE) {
                 return 6;
             }
-            return items.get(position).type + position;
+            if (item.type == FILTER_TYPE) {
+                return 100 + item.filterIndex;
+            }
+            return item.type;
         }
 
         @Override
