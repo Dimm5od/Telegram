@@ -6909,8 +6909,12 @@ public class ChatActivity extends BaseFragment implements
                     return;
                 }
                 if (result.type.equals("video") || result.type.equals("web_player_video")) {
-                    int[] size = MessageObject.getInlineResultWidthAndHeight(result);
-                    EmbedBottomSheet.show(ChatActivity.this, null, botContextProvider, result.title != null ? result.title : "", result.description, result.content.url, result.content.url, size[0], size[1], isKeyboardVisible());
+                    if (BuildVars.RESTRICTED_BUILD) {
+                        Browser.openUrl(getContext(), Uri.parse(result.content.url), false, true, false, null, null, false, false, false);
+                    } else {
+                        int[] size = MessageObject.getInlineResultWidthAndHeight(result);
+                        EmbedBottomSheet.show(ChatActivity.this, null, botContextProvider, result.title != null ? result.title : "", result.description, result.content.url, result.content.url, size[0], size[1], isKeyboardVisible());
+                    }
                 } else {
                     processExternalUrl(0, result.content.url, null, null, false, false);
                 }
@@ -35281,7 +35285,11 @@ public class ChatActivity extends BaseFragment implements
                     webPage = null;
                 }
                 if (webPage != null) {
-                    EmbedBottomSheet.show(ChatActivity.this, messageObject, photoViewerProvider, webPage.site_name, webPage.title, webPage.url, webPage.embed_url, webPage.embed_width, webPage.embed_height, seekTime, isKeyboardVisible());
+                    if (BuildVars.RESTRICTED_BUILD) {
+                        Browser.openUrl(getContext(), Uri.parse(webPage.url), false, true, false, null, null, false, false, false);
+                    } else {
+                        EmbedBottomSheet.show(ChatActivity.this, messageObject, photoViewerProvider, webPage.site_name, webPage.title, webPage.url, webPage.embed_url, webPage.embed_width, webPage.embed_height, seekTime, isKeyboardVisible());
+                    }
                 } else {
                     if (!messageObject.isVideo() && messageObject.replyMessageObject != null) {
                         MessageObject obj = messagesDict[messageObject.replyMessageObject.getDialogId() == dialog_id ? 0 : 1].get(messageObject.replyMessageObject.getId());
@@ -39136,7 +39144,11 @@ public class ChatActivity extends BaseFragment implements
         @Override
         public void needOpenWebView(MessageObject message, String url, String title, String description, String originalUrl, int w, int h) {
             try {
-                EmbedBottomSheet.show(ChatActivity.this, message, photoViewerProvider, title, description, originalUrl, url, w, h, isKeyboardVisible());
+                if (BuildVars.RESTRICTED_BUILD) {
+                    Browser.openUrl(getContext(), Uri.parse(url), false, true, false, null, null, false, false, false);
+                } else {
+                    EmbedBottomSheet.show(ChatActivity.this, message, photoViewerProvider, title, description, originalUrl, url, w, h, isKeyboardVisible());
+                }
             } catch (Throwable e) {
                 FileLog.e(e);
             }
