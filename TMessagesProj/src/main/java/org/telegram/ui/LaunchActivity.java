@@ -5366,6 +5366,16 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
                     }
                 }), ConnectionsManager.RequestFlagFailOnServerErrors);
             } else if (state == 1) {
+                if (BuildVars.RESTRICTED_BUILD) {
+                    try {
+                        dismissLoading.run();
+                    } catch (Exception e) {
+                        FileLog.e(e);
+                    }
+                    BaseFragment fragment = getSafeLastFragment();
+                    AlertsCreator.showSimpleAlert(fragment, "Недоступно в ограниченной врсии");
+                    return;
+                }
                 TLRPC.TL_messages_importChatInvite req = new TLRPC.TL_messages_importChatInvite();
                 req.hash = group;
                 ConnectionsManager.getInstance(intentAccount).sendRequest(req, (response, error) -> {

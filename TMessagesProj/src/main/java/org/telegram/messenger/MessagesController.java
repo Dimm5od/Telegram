@@ -14676,6 +14676,16 @@ public class MessagesController extends BaseController implements NotificationCe
         if (botHash == null || isChannel && !isMegagroup) {
             if (isChannel) {
                 if (inputUser instanceof TLRPC.TL_inputUserSelf) {
+                    if (BuildVars.RESTRICTED_BUILD) {
+                        AndroidUtilities.runOnUIThread(() -> AlertsCreator.showSimpleAlert(fragment, "Недоступно в ограниченной врсии"));
+                        if (onError != null) {
+                            onError.run(null);
+                        }
+                        if (processInvitedUsers != null) {
+                            processInvitedUsers.run(null);
+                        }
+                        return;
+                    }
                     if (joiningToChannels.contains(chatId)) {
                         if (onError != null) {
                             onError.run(null);
