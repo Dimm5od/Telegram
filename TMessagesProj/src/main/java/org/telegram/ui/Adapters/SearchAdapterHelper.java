@@ -177,9 +177,14 @@ public class SearchAdapterHelper {
             hasChanged = true;
         }
         if (allowUsername) {
-            if (query.length() > 0) {
+            String usernameQuery = query;
+            if (usernameQuery.startsWith("@")) {
+                usernameQuery = usernameQuery.substring(1);
+            }
+            if (usernameQuery.length() > 0) {
+                final String finalUsernameQuery = usernameQuery;
                 TLRPC.TL_contacts_search req = new TLRPC.TL_contacts_search();
-                req.q = query;
+                req.q = finalUsernameQuery;
                 req.limit = 20;
                 requests.add(new Pair<>(req, (response, error) -> {
                     if (delegate.canApplySearchResults(searchId)) {
@@ -229,7 +234,7 @@ public class SearchAdapterHelper {
                                         globalSearch.add(chat);
                                         globalSearchMap.put(-chat.id, chat);
                                     } else if (user != null) {
-                                        if (canAddGroupsOnly || !allowBots && user.bot || !allowSelf && user.self || !allowGlobalResults && b == 1 && !user.contact || !filter(user)) {
+                                        if (canAddGroupsOnly || !allowBots && user.bot || !allowSelf && user.self || !allowGlobalResults && b == 1 && user.bot && !user.contact && MessagesController.getInstance(currentAccount).dialogs_dict.indexOfKey(user.id) < 0 || !filter(user)) {
                                             continue;
                                         }
                                         globalSearch.add(user);
@@ -264,7 +269,7 @@ public class SearchAdapterHelper {
                                     }
                                 }
                             }
-                            lastFoundUsername = query.toLowerCase();
+                            lastFoundUsername = finalUsernameQuery.toLowerCase();
                         }
                     }
                 }));
