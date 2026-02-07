@@ -686,10 +686,6 @@ public class ThemeActivity extends BaseFragment implements NotificationCenter.No
 
             otherHeaderRow = rowCount++;
             directShareRow = rowCount++;
-            TL_account.contentSettings contentSettings = getMessagesController().getContentSettings();
-            if (contentSettings != null && contentSettings.sensitive_can_change) {
-                sensitiveContentRow = rowCount++;
-            }
             sendByEnterRow = rowCount++;
             distanceRow = rowCount++;
             otherSectionRow = rowCount++;
@@ -909,10 +905,6 @@ public class ThemeActivity extends BaseFragment implements NotificationCenter.No
             if (themeListRow2 >= 0) {
                 listAdapter.notifyItemChanged(themeListRow2);
             }
-        } else if (id == NotificationCenter.contentSettingsLoaded || id == NotificationCenter.appConfigUpdated) {
-            if (sensitiveContentRow >= 0) {
-                listAdapter.notifyItemChanged(sensitiveContentRow);
-            }
         }
     }
 
@@ -946,17 +938,7 @@ public class ThemeActivity extends BaseFragment implements NotificationCenter.No
             menuItem.addSubItem(create_theme, R.drawable.msg_palette, getString("CreateNewThemeMenu", R.string.CreateNewThemeMenu));
             menuItem.addSubItem(reset_settings, R.drawable.msg_reset, getString("ThemeResetToDefaults", R.string.ThemeResetToDefaults));
 
-            if (getMessagesController().getContentSettings() == null) {
-                getMessagesController().getContentSettings(settings -> {
-                    if (listView != null && listView.isAttachedToWindow() && listAdapter != null) {
-                        if ((sensitiveContentRow >= 0) == (settings != null && settings.sensitive_can_change)) {
-                            listAdapter.notifyItemChanged(sensitiveContentRow);
-                        } else {
-                            updateRows(true);
-                        }
-                    }
-                });
-            }
+            getMessagesController().getContentSettings(null);
         } else {
             actionBar.setTitle(getString("AutoNightTheme", R.string.AutoNightTheme));
         }
@@ -1294,38 +1276,6 @@ public class ThemeActivity extends BaseFragment implements NotificationCenter.No
                 SharedConfig.toggleDirectShare();
                 if (view instanceof TextCheckCell) {
                     ((TextCheckCell) view).setChecked(SharedConfig.directShare);
-                }
-            } else if (position == sensitiveContentRow) {
-                if (!getMessagesController().showSensitiveContent()) {
-                    Runnable set = () -> {
-                        getMessagesController().setContentSettings(true);
-                        if (view instanceof TextCheckCell) {
-                            ((TextCheckCell) view).setChecked(getMessagesController().showSensitiveContent());
-                        }
-                    };
-                    showDialog(
-                        new AlertDialog.Builder(context, resourceProvider)
-                            .setTitle(getString(R.string.ConfirmSensitiveContentTitle))
-                            .setMessage(getString(R.string.ConfirmSensitiveContentText))
-                            .setPositiveButton(getString(R.string.Confirm), (di, w) -> {
-                                verifyAge(getContext(), currentAccount, passed -> {
-                                    if (passed) {
-                                        set.run();
-                                    } else {
-                                        BulletinFactory.of(this)
-                                            .createSimpleBulletin(R.raw.error, getString(R.string.AgeVerificationFailedTitle), getString(R.string.AgeVerificationFailedText))
-                                            .show();
-                                    }
-                                }, getResourceProvider());
-                            })
-                            .setNegativeButton(getString(R.string.Cancel), null)
-                            .create()
-                    );
-                } else {
-                    getMessagesController().setContentSettings(false);
-                    if (view instanceof TextCheckCell) {
-                        ((TextCheckCell) view).setChecked(getMessagesController().showSensitiveContent());
-                    }
                 }
             } else if (position == contactsReimportRow) {
                 //not implemented
@@ -2605,8 +2555,6 @@ public class ThemeActivity extends BaseFragment implements NotificationCenter.No
                         textCheckCell.setTextAndCheck(getString(R.string.PauseMusicOnMedia), SharedConfig.pauseMusicOnMedia, true);
                     } else if (position == directShareRow) {
                         textCheckCell.setTextAndValueAndCheck(getString("DirectShare", R.string.DirectShare), getString("DirectShareInfo", R.string.DirectShareInfo), SharedConfig.directShare, false, true);
-                    } else if (position == sensitiveContentRow) {
-                        textCheckCell.setTextAndValueAndCheck(getString(R.string.ShowSensitiveContent), getString(R.string.ShowSensitiveContentInfo), getMessagesController().showSensitiveContent(), true, true);
                     } else if (position == chatBlurRow) {
                         textCheckCell.setTextAndCheck(getString("BlurInChat", R.string.BlurInChat), SharedConfig.chatBlurEnabled(), true);
                     }
