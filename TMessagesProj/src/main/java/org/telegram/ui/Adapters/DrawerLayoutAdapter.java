@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.ApplicationLoader;
+import org.telegram.messenger.BuildVars;
 import org.telegram.messenger.LocaleController;
 import org.telegram.messenger.MediaDataController;
 import org.telegram.messenger.MessagesController;
@@ -59,7 +60,7 @@ public class DrawerLayoutAdapter extends RecyclerListView.SelectionAdapter {
 
     private int getAccountRowsCount() {
         int count = accountNumbers.size() + 1;
-        if (accountNumbers.size() < UserConfig.MAX_ACCOUNT_COUNT) {
+        if (!BuildVars.RESTRICTED_BUILD && accountNumbers.size() < UserConfig.getMaxAccountCount()) {
             count++;
         }
         return count;
@@ -189,7 +190,7 @@ public class DrawerLayoutAdapter extends RecyclerListView.SelectionAdapter {
             if (i < accountNumbers.size()) {
                 return 4;
             } else {
-                if (accountNumbers.size() < UserConfig.MAX_ACCOUNT_COUNT) {
+                if (!BuildVars.RESTRICTED_BUILD && accountNumbers.size() < UserConfig.getMaxAccountCount()) {
                     if (i == accountNumbers.size()){
                         return 5;
                     } else if (i == accountNumbers.size() + 1) {
