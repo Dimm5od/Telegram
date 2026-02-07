@@ -3137,7 +3137,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                     searchContainer.addView(speedItem, speedParams);
                     searchItem.setSearchAdditionalButton(speedItem);
 
-                    updateSpeedItem(searchViewPager != null && searchViewPager.getCurrentPosition() == 2);
+                    updateSpeedItem(searchViewPager != null && searchViewPager.isDownloadsTabSelected());
                 }
             }
 
@@ -10846,7 +10846,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         } else if (id == NotificationCenter.onDownloadingFilesChanged) {
             updateProxyButton(true, false);
             if (searchViewPager != null) {
-                updateSpeedItem(searchViewPager.getCurrentPosition() == 2);
+                updateSpeedItem(searchViewPager.isDownloadsTabSelected());
             }
         } else if (id == NotificationCenter.needDeleteDialog) {
             if (fragmentView == null || isPaused) {
