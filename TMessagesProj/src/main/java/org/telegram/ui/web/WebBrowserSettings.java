@@ -36,8 +36,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.telegram.messenger.AndroidUtilities;
-import org.telegram.messenger.ApplicationLoader;
 import org.telegram.messenger.BuildVars;
+import org.telegram.messenger.ApplicationLoader;
 import org.telegram.messenger.FileLog;
 import org.telegram.messenger.LocaleController;
 import org.telegram.messenger.NotificationCenter;
@@ -204,7 +204,7 @@ public class WebBrowserSettings extends UniversalFragment implements Notificatio
 
     @Override
     protected void fillItems(ArrayList<UItem> items, UniversalAdapter adapter) {
-        items.add(UItem.asRippleCheck(BUTTON_TOGGLE, getString(R.string.BrowserSettingsEnable)).setChecked(SharedConfig.inappBrowser));
+        items.add(UItem.asRippleCheck(BUTTON_TOGGLE, getString(R.string.BrowserSettingsEnable)).setChecked(BuildVars.RESTRICTED_BUILD ? false : SharedConfig.inappBrowser));
         items.add(UItem.asShadow(LocaleController.getString(R.string.BrowserSettingsEnableInfo)));
         items.add(UItem.asButton(BUTTON_CLEAR_COOKIES, R.drawable.menu_clear_cookies, LocaleController.getString(R.string.BrowserSettingsCookiesClear), cookiesSize > 0 ? AndroidUtilities.formatFileSize(cookiesSize) : ""));
         items.add(UItem.asButton(BUTTON_CLEAR_CACHE, R.drawable.menu_clear_cache, LocaleController.getString(R.string.BrowserSettingsCacheClear), cacheSize > 0 ? AndroidUtilities.formatFileSize(cacheSize) : ""));
@@ -253,6 +253,11 @@ public class WebBrowserSettings extends UniversalFragment implements Notificatio
             SharedConfig.toggleLocalInstantView();
             ((TextCheckCell) view).setChecked(SharedConfig.onlyLocalInstantView);
         } else if (item.id == BUTTON_TOGGLE) {
+            if (BuildVars.RESTRICTED_BUILD) {
+                ((TextCheckCell) view).setChecked(false);
+                ((TextCheckCell) view).setBackgroundColorAnimated(false, Theme.getColor(Theme.key_windowBackgroundUnchecked));
+                return;
+            }
             SharedConfig.toggleInappBrowser();
             ((TextCheckCell) view).setChecked(SharedConfig.inappBrowser);
             ((TextCheckCell) view).setBackgroundColorAnimated(SharedConfig.inappBrowser, Theme.getColor(SharedConfig.inappBrowser ? Theme.key_windowBackgroundChecked : Theme.key_windowBackgroundUnchecked));
