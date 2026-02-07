@@ -54,6 +54,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.ApplicationLoader;
+import org.telegram.messenger.BuildVars;
 import org.telegram.messenger.FileLoader;
 import org.telegram.messenger.FileLog;
 import org.telegram.messenger.LocaleController;
@@ -1386,6 +1387,10 @@ public class ThemeActivity extends BaseFragment implements NotificationCenter.No
             } else if (position == browserRow) {
                 if (LocaleController.isRTL && x <= dp(76) || !LocaleController.isRTL && x >= view.getMeasuredWidth() - dp(76)) {
                     NotificationsCheckCell checkCell = (NotificationsCheckCell) view;
+                    if (BuildVars.RESTRICTED_BUILD) {
+                        checkCell.setChecked(false);
+                        return;
+                    }
                     SharedConfig.toggleInappBrowser();
                     checkCell.setChecked(SharedConfig.inappBrowser);
                 } else {
@@ -2625,7 +2630,7 @@ public class ThemeActivity extends BaseFragment implements NotificationCenter.No
                         }
                         checkCell.setTextAndValueAndIconAndCheck(getString("AutoNightTheme", R.string.AutoNightTheme), value, R.drawable.msg2_night_auto, enabled, 0, false, true);
                     } else if (position == browserRow) {
-                        checkCell.setTextAndValueAndIconAndCheck(getString(R.string.InappBrowser), getString(R.string.InappBrowserInfo), R.drawable.msg2_language, SharedConfig.inappBrowser, 0, false, true);
+                        checkCell.setTextAndValueAndIconAndCheck(getString(R.string.InappBrowser), getString(R.string.InappBrowserInfo), R.drawable.msg2_language, BuildVars.RESTRICTED_BUILD ? false : SharedConfig.inappBrowser, 0, false, true);
                     }
                     break;
                 }
