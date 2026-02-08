@@ -10,6 +10,7 @@ package org.telegram.ui.Adapters;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
