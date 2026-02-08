@@ -21,7 +21,6 @@ import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.ApplicationLoader;
 import org.telegram.messenger.BuildVars;
 import org.telegram.messenger.LocaleController;
-import org.telegram.messenger.MediaDataController;
 import org.telegram.messenger.MessagesController;
 import org.telegram.messenger.R;
 import org.telegram.messenger.UserConfig;
@@ -322,16 +321,7 @@ public class DrawerLayoutAdapter extends RecyclerListView.SelectionAdapter {
                 showDivider = true;
             }
         }
-        TLRPC.TL_attachMenuBots menuBots = MediaDataController.getInstance(UserConfig.selectedAccount).getAttachMenuBots();
-        if (menuBots != null && menuBots.bots != null) {
-            for (int i = 0; i < menuBots.bots.size(); i++) {
-                TLRPC.TL_attachMenuBot bot = menuBots.bots.get(i);
-                if (bot.show_in_side_menu && !TextUtils.equals("wallet", bot.short_name)) {
-                    items.add(new Item(bot));
-                    showDivider = true;
-                }
-            }
-        }
+        // Intentionally skip attach-menu bots in the side menu.
         if (showDivider) {
             items.add(null); // divider
         }
