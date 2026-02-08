@@ -10,6 +10,7 @@ package org.telegram.ui.Adapters;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -325,7 +326,7 @@ public class DrawerLayoutAdapter extends RecyclerListView.SelectionAdapter {
         if (menuBots != null && menuBots.bots != null) {
             for (int i = 0; i < menuBots.bots.size(); i++) {
                 TLRPC.TL_attachMenuBot bot = menuBots.bots.get(i);
-                if (bot.show_in_side_menu) {
+                if (bot.show_in_side_menu && !TextUtils.equals("wallet", bot.short_name)) {
                     items.add(new Item(bot));
                     showDivider = true;
                 }
