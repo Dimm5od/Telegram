@@ -234,8 +234,13 @@ public class EmojiView extends FrameLayout implements NotificationCenter.Notific
     private ObjectAnimator[] tabsYAnimators = new ObjectAnimator[3];
     private boolean firstTabUpdate;
     private ChooseStickerActionTracker chooseStickerActionTracker;
+    private static final boolean DISABLE_GIF_AND_STICKER_TABS = true;
 
     public void setAllow(boolean allowStickers, boolean allowGifs, boolean animated) {
+        if (DISABLE_GIF_AND_STICKER_TABS) {
+            allowStickers = false;
+            allowGifs = false;
+        }
         currentTabs.clear();
         for (int i = 0; i < allTabs.size(); i++) {
             if (allTabs.get(i).type == TAB_EMOJI) {
