@@ -86,6 +86,7 @@ android {
             debuggable false
             jniDebuggable false
             signingConfig signingConfigs.release
+			applicationIdSuffix ".kids"
             minifyEnabled true
             shrinkResources false
             multiDexEnabled true
