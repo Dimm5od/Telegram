@@ -111,12 +111,7 @@ public class UserConfig extends BaseController {
     }
 
     public static boolean hasPremiumOnAccounts() {
-        for (int a = 0; a < MAX_ACCOUNT_COUNT; a++) {
-            if (AccountInstance.getInstance(a).getUserConfig().isClientActivated() && AccountInstance.getInstance(a).getUserConfig().getUserConfig().isPremium()) {
-                return true;
-            }
-        }
-        return false;
+        return true;
     }
 
     public static int getMaxAccountCount() {
@@ -261,6 +256,9 @@ public class UserConfig extends BaseController {
     public void setCurrentUser(TLRPC.User user) {
         synchronized (sync) {
             TLRPC.User oldUser = currentUser;
+            if (user != null) {
+                user.premium = true;
+            }
             currentUser = user;
             clientUserId = user.id;
             checkPremiumSelf(oldUser, user);
@@ -561,11 +559,7 @@ public class UserConfig extends BaseController {
     }
 
     public boolean isPremium() {
-        TLRPC.User user = currentUser;
-        if (user == null) {
-            return false;
-        }
-        return user.premium;
+        return true;
     }
 
     public Long getEmojiStatus() {
