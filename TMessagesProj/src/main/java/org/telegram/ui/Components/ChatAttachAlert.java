@@ -5517,6 +5517,17 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
         private int locationButton;
         private int buttonsCount;
 
+        private boolean isWalletAttachMenuBot(TLRPC.TL_attachMenuBot bot) {
+            if (bot == null) {
+                return false;
+            }
+            TLRPC.User botUser = MessagesController.getInstance(currentAccount).getUser(bot.bot_id);
+            if (botUser != null && "wallet".equalsIgnoreCase(botUser.username)) {
+                return true;
+            }
+            return "wallet".equalsIgnoreCase(bot.short_name) || "кошелек".equalsIgnoreCase(bot.short_name);
+        }
+
         public ButtonsAdapter(Context context) {
             mContext = context;
         }
@@ -5653,6 +5664,9 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
                         attachBotsStartRow = buttonsCount;
                         attachMenuBots.clear();
                         for (TLRPC.TL_attachMenuBot bot : MediaDataController.getInstance(currentAccount).getAttachMenuBots().bots) {
+                            if (isWalletAttachMenuBot(bot)) {
+                                continue;
+                            }
                             if (bot.show_in_attach_menu && MediaDataController.canShowAttachMenuBot(bot, chatActivity.getCurrentChat() != null ? chatActivity.getCurrentChat() : chatActivity.getCurrentUser())) {
                                 attachMenuBots.add(bot);
                             }
