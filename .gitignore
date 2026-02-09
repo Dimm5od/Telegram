@@ -13,3 +13,7 @@ TMessagesProj_App/afat/
 TMessagesProj_AppHockeyApp/afat/
 TMessagesProj_AppStandalone/afat/
 TMessagesProj_AppHuawei/afat/
+
+# Local Firebase config (do not commit)
+TMessagesProj/google-services.json
+TMessagesProj_App/google-services.json
